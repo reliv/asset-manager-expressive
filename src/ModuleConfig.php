@@ -36,7 +36,7 @@ class ModuleConfig
             ],
         ];
 
-        $dependencies = array_merge_recursive(
+        $dependencies = \Zend\Stdlib\ArrayUtils::merge(
             $config['service_manager'],
             $dependencies
         );
