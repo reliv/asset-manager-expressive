@@ -7,6 +7,8 @@ use AssetManager\Exception;
 use AssetManager\Resolver\ResolverInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Stream;
 
 /**
  * @author James Jervis - https://github.com/jerv13
@@ -46,12 +48,10 @@ class AssetManager extends \AssetManager\Service\AssetManager
     /**
      * Set the asset on the response, including headers and content.
      *
-     * @param    ResponseInterface $response
-     *
      * @return   ResponseInterface
      * @throws   Exception\RuntimeException
      */
-    public function setAssetOnResponsePsr(ResponseInterface $response)
+    public function setAssetOnResponsePsr()
     {
         if (!$this->asset instanceof AssetInterface) {
             throw new Exception\RuntimeException(
@@ -86,23 +86,19 @@ class AssetManager extends \AssetManager\Service\AssetManager
             }
         }
 
-        /** @var ResponseInterface $response */
-        $response = $response->withAddedHeader(
-            'Content-Transfer-Encoding',
-            'binary'
-        )->withAddedHeader(
-            'Content-Type',
-            $mimeType
-        )->withAddedHeader(
-            'Content-Length',
-            $contentLength
-        );
-
-        $body = $response->getBody();
-        $body->rewind();
+        $body = new Stream('php://temp', 'wb+');
         $body->write($assetContents);
+        $body->rewind();
 
-        $response = $response->withBody($body);
+        $response = new Response(
+            $body,
+            200,
+            [
+                'Content-Transfer-Encoding' => 'binary',
+                'Content-Type' => $mimeType,
+                'Content-Length' => $contentLength
+            ]
+        );
 
         $this->assetSetOnResponse = true;
 
@@ -123,6 +119,7 @@ class AssetManager extends \AssetManager\Service\AssetManager
         //$fullPath   = $uri->getPath();
         //$path       = substr($fullPath, strlen($request->getBasePath()) + 1);
         $path = $uri->getPath();
+        $path = ltrim($path, '/');
         $this->path = $path;
         $asset = $this->getResolver()->resolve($path);
 
