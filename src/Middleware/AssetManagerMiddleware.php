@@ -44,6 +44,6 @@ class AssetManagerMiddleware
             return $next($request, $response);
         }
 
-        return $this->assetManager->setAssetOnResponsePsr($response->withStatus(200));
+        return $this->assetManager->setAssetOnResponsePsr();
     }
 }
