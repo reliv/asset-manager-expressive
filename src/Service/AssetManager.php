@@ -34,10 +34,10 @@ class AssetManager extends \AssetManager\Service\AssetManager
      *
      * @return   boolean
      */
-    public function resolvesToAsset(ServerRequestInterface $request)
+    public function resolvesToAssetPsr(ServerRequestInterface $request)
     {
         if (null === $this->asset) {
-            $this->asset = $this->resolve($request);
+            $this->asset = $this->resolvePsr($request);
         }
 
         return (bool)$this->asset;
@@ -51,7 +51,7 @@ class AssetManager extends \AssetManager\Service\AssetManager
      * @return   ResponseInterface
      * @throws   Exception\RuntimeException
      */
-    public function setAssetOnResponse(ResponseInterface $response)
+    public function setAssetOnResponsePsr(ResponseInterface $response)
     {
         if (!$this->asset instanceof AssetInterface) {
             throw new Exception\RuntimeException(
@@ -116,7 +116,7 @@ class AssetManager extends \AssetManager\Service\AssetManager
      *
      * @return mixed false when not found, AssetInterface when resolved.
      */
-    protected function resolve(ServerRequestInterface $request)
+    protected function resolvePsr(ServerRequestInterface $request)
     {
         /* @var $uri \Zend\Uri\UriInterface */
         $uri = $request->getUri();

@@ -2,6 +2,7 @@
 
 namespace Reliv\AssetManagerExpressive;
 
+use Doctrine\Common\Util\Debug;
 use Reliv\AssetManagerExpressive\Middleware\AssetManagerMiddleware;
 use Reliv\AssetManagerExpressive\Middleware\AssetManagerMiddlewareFactory;
 use Reliv\AssetManagerExpressive\Service\AssetManager;
@@ -26,11 +27,13 @@ class ModuleConfig
     {
         $config = require(__DIR__ . '/../../../rwoverdijk/assetmanager/config/module.config.php');
         $dependencies = [
-            AssetManagerMiddleware::class
-            => AssetManagerMiddlewareFactory::class,
+            'factories' => [
+                AssetManagerMiddleware::class
+                => AssetManagerMiddlewareFactory::class,
 
-            AssetManager::class
-            => AssetManagerFactory::class,
+                AssetManager::class
+                => AssetManagerFactory::class,
+            ],
         ];
 
         $dependencies = array_merge_recursive(

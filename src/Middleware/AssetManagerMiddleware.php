@@ -40,10 +40,10 @@ class AssetManagerMiddleware
         ResponseInterface $response,
         callable $next = null
     ) {
-        if (!$this->assetManager->resolvesToAsset($request)) {
+        if (!$this->assetManager->resolvesToAssetPsr($request)) {
             return $next($request, $response);
         }
 
-        return $this->assetManager->setAssetOnResponse($response->withStatus(200));
+        return $this->assetManager->setAssetOnResponsePsr($response->withStatus(200));
     }
 }
