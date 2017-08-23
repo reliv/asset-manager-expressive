@@ -25,7 +25,8 @@ class ModuleConfig
      */
     public function __invoke()
     {
-        $config = require(__DIR__ . '/../../../rwoverdijk/assetmanager/config/module.config.php');
+        $module = new \AssetManager\Module();
+        $config = $module->getConfig();
         $dependencies = [
             'factories' => [
                 AssetManagerMiddleware::class
